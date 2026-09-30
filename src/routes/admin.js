@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import { z } from 'zod';
 import pool from '../db.js';
 import { isAdmin } from '../middleware/auth.js';
+import { asyncHandler } from '../middleware/async.js';
 import { loginLimiter } from '../middleware/limits.js';
 
 const router = Router();
@@ -11,7 +12,7 @@ const URGENSI = ['Ringan', 'Sedang', 'Berat'];
 
 router.get('/login', (req, res) => res.render('admin-login', { error: null }));
 
-router.post('/login', loginLimiter, async (req, res) => {
+router.post('/login', loginLimiter, asyncHandler(async (req, res) => {
   const { username, password } = req.body;
   const { rows } = await pool.query('SELECT * FROM admins WHERE username = $1', [username]);
   const admin = rows[0];
@@ -22,7 +23,7 @@ router.post('/login', loginLimiter, async (req, res) => {
     req.session.admin = { id: admin.id, username: admin.username };
     res.redirect('/admin');
   });
-});
+}));
 
 router.post('/logout', (req, res) => {
   req.session.destroy(() => res.redirect('/admin/login'));
@@ -30,7 +31,7 @@ router.post('/logout', (req, res) => {
 
 router.get('/password', isAdmin, (req, res) => res.render('admin-password', { error: null, ok: null }));
 
-router.post('/password', isAdmin, loginLimiter, async (req, res) => {
+router.post('/password', isAdmin, loginLimiter, asyncHandler(async (req, res) => {
   const schema = z.object({ current: z.string().min(1), next: z.string().min(8, 'Password baru minimal 8 karakter.') });
   const parsed = schema.safeParse(req.body);
   if (!parsed.success) return res.status(400).render('admin-password', { error: parsed.error.issues[0].message, ok: null });
@@ -42,14 +43,14 @@ router.post('/password', isAdmin, loginLimiter, async (req, res) => {
   const hash = await bcrypt.hash(parsed.data.next, 12);
   await pool.query('UPDATE admins SET password_hash = $1 WHERE id = $2', [hash, req.session.admin.id]);
   req.session.regenerate(() => res.render('admin-password', { error: null, ok: 'Password berhasil diganti.' }));
-});
+}));
 
-router.get('/unread-count', isAdmin, async (req, res) => {
+router.get('/unread-count', isAdmin, asyncHandler(async (req, res) => {
   const { rows } = await pool.query(`SELECT COUNT(*)::int AS count FROM reports WHERE status = 'Diterima'`);
   res.json({ count: rows[0].count });
-});
+}));
 
-router.get('/', isAdmin, async (req, res) => {
+router.get('/', isAdmin, asyncHandler(async (req, res) => {
   const status = STATUS.includes(req.query.status) ? req.query.status : null;
   const { rows } = await pool.query(
     status
@@ -59,15 +60,15 @@ router.get('/', isAdmin, async (req, res) => {
   );
   const unread = await pool.query(`SELECT COUNT(*)::int AS count FROM reports WHERE status = 'Diterima'`);
   res.render('dashboard', { reports: rows, filter: status || 'Semua', unread: unread.rows[0].count });
-});
+}));
 
-router.get('/:ticket', isAdmin, async (req, res) => {
+router.get('/:ticket', isAdmin, asyncHandler(async (req, res) => {
   const { rows } = await pool.query('SELECT * FROM reports WHERE ticket_code = $1', [req.params.ticket.toUpperCase()]);
   if (!rows.length) return res.status(404).send('Tiket tidak ditemukan.');
   res.render('detail', { r: rows[0], statusList: STATUS, urgensiList: URGENSI });
-});
+}));
 
-router.patch('/:ticket', isAdmin, async (req, res) => {
+router.patch('/:ticket', isAdmin, asyncHandler(async (req, res) => {
   const schema = z.object({ status: z.enum(STATUS).optional(), urgensi: z.enum(URGENSI).optional() });
   const parsed = schema.safeParse(req.body);
   if (!parsed.success) return res.status(400).json({ error: 'Nilai status/urgensi tidak valid.' });
@@ -78,6 +79,6 @@ router.patch('/:ticket', isAdmin, async (req, res) => {
   );
   if (!rows.length) return res.status(404).json({ error: 'Tiket tidak ditemukan.' });
   res.json({ ok: true });
-});
+}));
 
 export default router;
