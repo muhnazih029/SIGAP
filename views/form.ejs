@@ -10,21 +10,22 @@
 </div>
 <% if (error) { %><div class="bg-red-100 text-red-800 p-3 rounded-xl mb-4"><%= error %></div><% } %>
 <form action="/lapor" method="POST" enctype="multipart/form-data" id="laporForm" class="bg-white p-5 rounded-2xl shadow space-y-4">
-  <label class="block">Kategori
-    <select name="kategori" required class="w-full border rounded p-2 mt-1">
-      <% ['Fisik','Verbal','Sosial','Cyber'].forEach(k => { %>
-        <option <%= old.kategori===k?'selected':'' %>><%= k %></option>
+  <label class="block font-semibold text-sm">Kategori perundungan
+    <select name="kategori" required class="w-full border rounded-xl p-3 mt-1 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <option value="" disabled <%= !old.kategori?'selected':'' %>>— Pilih kategori —</option>
+      <% [['Fisik','Kekerasan fisik: memukul, menendang, merusak barang'],['Verbal','Ejekan, ancaman, atau hinaan lisan/tulisan'],['Sosial','Dikucilkan, dijauhi, atau disebar gosip'],['Cyber','Perundungan via chat, medsos, atau foto/video']].forEach(([k, d]) => { %>
+        <option value="<%= k %>" <%= old.kategori===k?'selected':'' %>><%= k %> — <%= d %></option>
       <% }) %>
     </select>
   </label>
-  <label class="block">Kronologi (min 20 karakter)
-    <textarea name="kronologi" required minlength="20" rows="4" class="w-full border rounded p-2 mt-1"><%= old.kronologi||'' %></textarea>
+  <label class="block font-semibold text-sm">Kronologi kejadian <span class="font-normal text-slate-500">(min. 20 karakter)</span>
+    <textarea name="kronologi" required minlength="20" rows="5" placeholder="Contoh: Pada jam istirahat hari Senin, saya melihat seorang siswa kelas 10 didorong hingga jatuh di koridor dekat kantin oleh dua siswa senior. Jelaskan apa yang terjadi, kapan, di mana, dan siapa yang terlibat." class="w-full border rounded-xl p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-slate-400"><%= old.kronologi||'' %></textarea>
   </label>
-  <label class="block">Waktu kejadian
-    <input type="datetime-local" name="waktu_kejadian" required value="<%= old.waktu_kejadian||'' %>" class="w-full border rounded p-2 mt-1">
+  <label class="block font-semibold text-sm">Waktu kejadian
+    <input type="datetime-local" name="waktu_kejadian" required value="<%= old.waktu_kejadian||'' %>" class="w-full border rounded-xl p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500">
   </label>
-  <label class="block">Lokasi
-    <input type="text" name="lokasi" required value="<%= old.lokasi||'' %>" placeholder="Contoh: Kelas 10-A" class="w-full border rounded p-2 mt-1">
+  <label class="block font-semibold text-sm">Lokasi kejadian
+    <input type="text" name="lokasi" required value="<%= old.lokasi||'' %>" placeholder="Contoh: Koridor dekat kantin, Kelas 10-A" class="w-full border rounded-xl p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500 placeholder:text-slate-400">
   </label>
   <label class="block">Bukti foto (opsional, JPG/PNG/WebP, maks 2MB)
     <input type="file" name="bukti" id="bukti" accept="image/jpeg,image/png,image/webp" class="w-full mt-1">
