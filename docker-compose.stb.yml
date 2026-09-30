@@ -1,0 +1,9 @@
+# STB overlay: podman without nftables/netavark can't create bridge networks.
+# Host networking sidesteps that entirely (no container DNS either,
+# so DATABASE_URL on STB must use 127.0.0.1, not the `db` hostname).
+# Usage on STB: docker compose -f docker-compose.yml -f docker-compose.stb.yml up -d
+services:
+  db:
+    network_mode: host
+  app:
+    network_mode: host
