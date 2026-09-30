@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgres:16-alpine
+    image: docker.io/library/postgres:16-alpine
     restart: unless-stopped
     environment:
       # Dev default `changeme` is an intentional non-secret placeholder
@@ -15,7 +15,7 @@ services:
       - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
 
   app:
-    image: node:20-alpine
+    image: docker.io/library/node:20-alpine
     restart: unless-stopped
     working_dir: /app
     # heap cap: STB has <1GB RAM, keep npm install from OOM-killing the box
