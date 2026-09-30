@@ -1,6 +1,9 @@
-// Smoke test: boots expectations without DB.
-// Run: PORT=3101 node server.js &  npm run test:smoke
-const base = process.env.SMOKE_URL || 'http://localhost:3101';
+// Smoke test: server must already be running (terminal 1),
+// then run this in terminal 2 on the SAME port:
+//   Terminal 1: npm run dev                 (port 3000)
+//   Terminal 2: npm run test:smoke          (hits 3000)
+//   Custom port: PORT=3101 npm run dev  +  PORT=3101 npm run test:smoke
+const base = process.env.SMOKE_URL || `http://localhost:${process.env.PORT || 3000}`;
 
 const checks = [
   ['GET /', '/'],
