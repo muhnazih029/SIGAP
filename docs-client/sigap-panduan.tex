@@ -36,6 +36,21 @@
     minimum height=1cm, align=center, font=\small},
   aktor/.style={font=\small\bfseries}
 }
+% Dua screenshot berdampingan untuk langkah yang berurutan.
+\newcommand{\screenshotpair}[4]{%
+  \begin{figure}[H]
+  \centering
+  \begin{minipage}{0.48\linewidth}\centering
+    \IfFileExists{gambar/#1}{\includegraphics[width=\linewidth,height=0.42\textheight,keepaspectratio]{gambar/#1}}{%
+      \fbox{\parbox{\linewidth}{\centering \vspace{0.6cm}\textit{[Screenshot: #3]}\\\vspace{0.6cm}}}}
+    \caption{#3}
+  \end{minipage}\hfill
+  \begin{minipage}{0.48\linewidth}\centering
+    \IfFileExists{gambar/#2}{\includegraphics[width=\linewidth,height=0.42\textheight,keepaspectratio]{gambar/#2}}{%
+      \fbox{\parbox{\linewidth}{\centering \vspace{0.6cm}\textit{[Screenshot: #4]}\\\vspace{0.6cm}}}}
+    \caption{#4}
+  \end{minipage}
+  \end{figure}}
 \newcommand{\screenshot}[3][0.8\linewidth]{%
   \begin{figure}[H]
   \centering
@@ -215,24 +230,21 @@ Ikuti sesuai urutan gambar: formulir, halaman sukses, halaman cek.
   \screenshot{form-lapor.jpg}{formulir laporan}
   \item \textbf{Simpan kode tiket} yang muncul: salin dengan tombol
         \textbf{Salin Kode} atau cetak halamannya.
-  \screenshot{sukses-tiket.jpg}{halaman sukses dan kode tiket}
   \item Buka \textbf{Cek Tiket} kapan saja dan masukkan kode untuk melihat
         perkembangan status laporan.
-  \screenshot{cek-tiket.jpg}{hasil cek status dan linimasa}
+  \screenshotpair{sukses-tiket.jpg}{cek-tiket.jpg}{halaman sukses dan kode tiket}{hasil cek status dan linimasa}
 \end{enumerate}
 
 \section{Panduan Guru BK}
 \begin{enumerate}
   \item Masuk dengan username dan password yang diberikan pengembang.
-  \screenshot{login-admin.jpg}{halaman login admin}
   \item Pantau lencana angka di judul dashboard. Saring dengan dropdown filter
         atau cari kode tiket tertentu.
-  \screenshot{dashboard.jpg}{dashboard admin}
+  \screenshotpair{login-admin.jpg}{dashboard.jpg}{halaman login admin}{dashboard admin}
   \item Buka rincian, periksa kronologi dan foto bukti, tentukan urgensi, lalu
         majukan status hingga \textbf{Selesai} dengan tombol \textbf{Simpan}.
-  \screenshot{detail-laporan.jpg}{rincian laporan}
   \item Segera ganti password bawaan melalui menu avatar di kanan atas navbar.
-  \screenshot{ganti-password.jpg}{halaman ganti password}
+  \screenshotpair{detail-laporan.jpg}{ganti-password.jpg}{rincian laporan}{halaman ganti password}
 \end{enumerate}
 
 \section{Aktivasi Notifikasi Telegram}
