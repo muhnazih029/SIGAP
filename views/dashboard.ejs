@@ -1,17 +1,25 @@
 <%- include('_head', { title: 'Dashboard' }) %>
 <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
   <h1 class="text-2xl font-extrabold">Dashboard <span id="badge" class="text-xs bg-red-600 text-white px-2 py-1 rounded-full align-middle"><%= unread %> baru</span></h1>
-  <div class="flex gap-3 text-sm">
-    <a href="/admin/password" class="underline">Ganti Password</a>
-    <form action="/admin/logout" method="POST"><button class="underline">Keluar</button></form>
+  <div class="relative">
+    <button id="avatarBtn" class="w-10 h-10 rounded-full bg-blue-700 text-white font-bold hover:bg-blue-800 transition" title="Menu admin">A</button>
+    <div id="avatarMenu" class="hidden absolute right-0 mt-2 w-44 bg-white rounded-xl shadow-lg border text-sm overflow-hidden z-10">
+      <a href="/admin/password" class="block px-4 py-3 hover:bg-slate-100">🔑 Ganti Password</a>
+      <form action="/admin/logout" method="POST"><button class="w-full text-left px-4 py-3 hover:bg-slate-100 text-red-700">🚪 Keluar</button></form>
+    </div>
   </div>
 </div>
-<div class="flex gap-2 mb-3 text-sm flex-wrap">
-  <% ['Semua','Diterima','Diverifikasi','Diproses','Selesai'].forEach(s => { %>
-    <a href="/admin<%= s==='Semua'?'':'?status='+s %>" class="px-3 py-1.5 rounded-full font-semibold <%= filter===s?'bg-blue-700 text-white':'bg-white border' %>"><%= s %></a>
-  <% }) %>
+<div class="flex gap-2 mb-3">
+  <input id="q" placeholder="Cari tiket…" class="flex-1 border rounded-xl p-3 font-mono min-w-0">
+  <label class="relative flex items-center">
+    <svg class="w-5 h-5 absolute left-3 text-slate-500 pointer-events-none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 5h16M7 12h10M10 19h4"/></svg>
+    <select id="statusFilter" class="appearance-none border rounded-xl pl-10 pr-8 py-3 bg-white font-semibold text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+      <% ['Semua','Diterima','Diverifikasi','Diproses','Selesai'].forEach(s => { %>
+        <option value="<%= s %>" <%= filter===s?'selected':'' %>><%= s %></option>
+      <% }) %>
+    </select>
+  </label>
 </div>
-<input id="q" placeholder="Cari tiket…" class="w-full border rounded-xl p-3 mb-3 font-mono">
 <div class="bg-white rounded-2xl shadow overflow-hidden">
 <table class="w-full text-sm">
   <thead class="bg-slate-50 text-left text-xs text-slate-500">
@@ -32,6 +40,15 @@
 <% if (!reports.length) { %><p class="text-slate-500 p-4 text-sm">Belum ada laporan.</p><% } %>
 </div>
 <script>
+document.getElementById('avatarBtn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  document.getElementById('avatarMenu').classList.toggle('hidden');
+});
+document.addEventListener('click', () => document.getElementById('avatarMenu').classList.add('hidden'));
+document.getElementById('statusFilter').addEventListener('change', (e) => {
+  const v = e.target.value;
+  window.location = '/admin' + (v === 'Semua' ? '' : '?status=' + v);
+});
 document.getElementById('q').addEventListener('input', (e) => {
   const q = e.target.value.toUpperCase();
   document.querySelectorAll('#rows tr').forEach(tr => {
