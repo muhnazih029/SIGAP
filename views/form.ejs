@@ -1,8 +1,15 @@
 <%- include('_head', { title: 'Lapor' }) %>
-<h1 class="text-2xl font-bold mb-1">Form Laporan Bullying</h1>
-<p class="text-sm text-slate-600 mb-4">Anonim. Simpan kode tiket setelah mengirim.</p>
-<% if (error) { %><div class="bg-red-100 text-red-800 p-3 rounded mb-4"><%= error %></div><% } %>
-<form action="/lapor" method="POST" enctype="multipart/form-data" id="laporForm" class="bg-white p-4 rounded shadow space-y-3">
+<div class="bg-gradient-to-r from-blue-800 to-blue-600 text-white rounded-2xl p-6 mb-4">
+  <h1 class="text-2xl font-extrabold">Lapor Bullying, Anonim & Aman</h1>
+  <p class="text-sm text-blue-100 mt-1">Laporanmu langsung diteruskan ke Guru BK.</p>
+  <ol class="flex gap-2 mt-4 text-xs font-semibold">
+    <li class="bg-white/20 px-3 py-1.5 rounded-full">1. Isi form</li>
+    <li class="bg-white/20 px-3 py-1.5 rounded-full">2. Simpan tiket</li>
+    <li class="bg-white/20 px-3 py-1.5 rounded-full">3. Cek status</li>
+  </ol>
+</div>
+<% if (error) { %><div class="bg-red-100 text-red-800 p-3 rounded-xl mb-4"><%= error %></div><% } %>
+<form action="/lapor" method="POST" enctype="multipart/form-data" id="laporForm" class="bg-white p-5 rounded-2xl shadow space-y-4">
   <label class="block">Kategori
     <select name="kategori" required class="w-full border rounded p-2 mt-1">
       <% ['Fisik','Verbal','Sosial','Cyber'].forEach(k => { %>
@@ -24,7 +31,7 @@
     <span id="compressNote" class="text-xs text-slate-500"></span>
   </label>
   <input type="text" name="website" style="display:none" tabindex="-1" autocomplete="off">
-  <button id="submitBtn" class="bg-blue-700 text-white px-4 py-2 rounded w-full">Kirim Laporan</button>
+  <button id="submitBtn" class="bg-blue-700 hover:bg-blue-800 active:scale-[.99] transition text-white font-bold px-4 py-3 rounded-xl w-full min-h-[44px]">Kirim Laporan</button>
 </form>
 <script src="/compress.js"></script>
 <%- include('_foot') %>

@@ -5,6 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title><%= typeof title !== 'undefined' ? title + ' — ' : '' %>SIGAP</title>
 <script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  body { font-family: 'Plus Jakarta Sans', system-ui, sans-serif; }
+  #toasts { position: fixed; top: 1rem; right: 1rem; z-index: 50; display: flex; flex-direction: column; gap: .5rem; }
+  .toast { padding: .75rem 1rem; border-radius: .75rem; color: #fff; font-size: .875rem; box-shadow: 0 8px 24px rgba(0,0,0,.18); opacity: 0; transform: translateX(1rem); transition: opacity .3s, transform .3s; max-width: 20rem; }
+  .toast.show { opacity: 1; transform: none; }
+  .toast-ok { background: #15803d; } .toast-err { background: #b91c1c; }
+</style>
 <link rel="manifest" href="/manifest.webmanifest">
 <meta name="theme-color" content="#1e40af">
 </head>

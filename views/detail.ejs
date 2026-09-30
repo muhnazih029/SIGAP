@@ -20,8 +20,7 @@
       <% urgensiList.forEach(u => { %><option <%= r.urgensi===u?'selected':'' %>><%= u %></option><% }) %>
     </select>
   </label>
-  <button class="bg-blue-700 text-white px-4 py-2 rounded">Simpan</button>
-  <span id="msg" class="text-sm"></span>
+  <button class="bg-blue-700 hover:bg-blue-800 transition text-white font-bold px-4 py-3 rounded-xl min-h-[44px]">Simpan</button>
 </form>
 <script>
 document.getElementById('upd').onsubmit = async (e) => {
@@ -29,7 +28,8 @@ document.getElementById('upd').onsubmit = async (e) => {
   const body = { status: document.getElementById('status').value };
   const u = document.getElementById('urgensi').value; if (u) body.urgensi = u;
   const r = await fetch('/admin/<%= r.ticket_code %>', { method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) });
-  document.getElementById('msg').textContent = r.ok ? 'Tersimpan.' : 'Gagal menyimpan.';
+  if (r.ok) toast('Perubahan tersimpan.');
+  else toast('Gagal menyimpan.', 'err');
 };
 </script>
 <%- include('_foot') %>

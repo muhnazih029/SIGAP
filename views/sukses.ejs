@@ -3,7 +3,8 @@
   <h1 class="text-xl font-bold mb-2">Laporan Terkirim</h1>
   <p class="text-sm mb-4">Simpan kode tiket ini untuk cek status:</p>
   <div class="text-3xl font-mono font-bold bg-slate-100 p-4 rounded mb-4"><%= ticket %></div>
-  <a href="/cek?ticket=<%= ticket %>" class="bg-blue-700 text-white px-4 py-2 rounded">Cek Status</a>
-  <button onclick="window.print()" class="ml-2 border px-4 py-2 rounded">Cetak</button>
+  <a href="/cek?ticket=<%= ticket %>" class="bg-blue-700 hover:bg-blue-800 transition text-white font-bold px-4 py-3 rounded-xl">Cek Status</a>
+  <button onclick="window.print()" class="ml-2 border px-4 py-3 rounded-xl">Cetak</button>
 </div>
+<script>toast('Laporan terkirim. Simpan kode tiketmu.');</script>
 <%- include('_foot') %>

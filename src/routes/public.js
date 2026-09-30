@@ -7,6 +7,7 @@ import { generateTicket } from '../ticket.js';
 import { saveEvidence } from '../storage.js';
 import { notifyAdminNewReport } from '../notify.js';
 import { laporLimiter, cekLimiter } from '../middleware/limits.js';
+import { asyncHandler } from '../middleware/async.js';
 
 const router = Router();
 const upload = multer({
@@ -72,19 +73,19 @@ router.post('/lapor', laporLimiter, upload.single('bukti'), async (req, res) => 
 
 router.get('/sukses', (req, res) => res.render('sukses', { ticket: req.query.ticket || '-' }));
 
-router.get('/cek', cekLimiter, async (req, res) => {
+router.get('/cek', cekLimiter, asyncHandler(async (req, res) => {
   const raw = String(req.query.ticket || '').trim().toUpperCase();
-  if (!raw) return res.render('cek', { result: null, error: null });
+  if (!raw) return res.render('cek', { result: null, error: null, ticket: '' });
   try {
     const { rows } = await pool.query(
       'SELECT ticket_code, kategori, status, urgensi, waktu_kejadian, LEFT(kronologi, 200) AS ringkasan FROM reports WHERE ticket_code = $1',
       [raw]
     );
-    if (!rows.length) return res.status(404).render('cek', { result: null, error: 'Tiket tidak ditemukan.' });
-    res.render('cek', { result: rows[0], error: null });
+    if (!rows.length) return res.status(404).render('cek', { result: null, error: 'Tiket tidak ditemukan.', ticket: raw });
+    res.render('cek', { result: rows[0], error: null, ticket: raw });
   } catch {
-    res.status(500).render('cek', { result: null, error: 'Database tidak tersedia. Coba lagi nanti.' });
+    res.status(500).render('cek', { result: null, error: 'Database tidak tersedia. Coba lagi nanti.', ticket: raw });
   }
-});
+}));
 
 export default router;

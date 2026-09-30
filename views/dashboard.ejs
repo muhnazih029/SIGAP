@@ -1,33 +1,47 @@
 <%- include('_head', { title: 'Dashboard' }) %>
-<div class="flex justify-between items-center mb-4">
-  <h1 class="text-2xl font-bold">Dashboard <span id="badge" class="text-sm bg-red-600 text-white px-2 py-1 rounded"><%= unread %> baru</span></h1>
-  <div class="flex gap-2 text-sm">
+<div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+  <h1 class="text-2xl font-extrabold">Dashboard <span id="badge" class="text-xs bg-red-600 text-white px-2 py-1 rounded-full align-middle"><%= unread %> baru</span></h1>
+  <div class="flex gap-3 text-sm">
     <a href="/admin/password" class="underline">Ganti Password</a>
     <form action="/admin/logout" method="POST"><button class="underline">Keluar</button></form>
   </div>
 </div>
-<div class="flex gap-2 mb-4 text-sm flex-wrap">
+<div class="flex gap-2 mb-3 text-sm flex-wrap">
   <% ['Semua','Diterima','Diverifikasi','Diproses','Selesai'].forEach(s => { %>
-    <a href="/admin<%= s==='Semua'?'':'?status='+s %>" class="px-3 py-1 rounded <%= filter===s?'bg-blue-700 text-white':'bg-white border' %>"><%= s %></a>
+    <a href="/admin<%= s==='Semua'?'':'?status='+s %>" class="px-3 py-1.5 rounded-full font-semibold <%= filter===s?'bg-blue-700 text-white':'bg-white border' %>"><%= s %></a>
   <% }) %>
 </div>
-<div class="space-y-2">
-<% reports.forEach(r => { %>
-  <a href="/admin/<%= r.ticket_code %>" class="block bg-white p-3 rounded shadow">
-    <span class="font-mono font-bold"><%= r.ticket_code %></span>
-    <span class="ml-2 text-sm"><%= r.kategori %></span>
-    <span class="ml-2 text-xs bg-slate-200 px-2 py-1 rounded"><%= r.status %></span>
-    <span class="ml-1 text-xs"><%= r.urgensi||'' %></span>
-  </a>
-<% }) %>
-<% if (!reports.length) { %><p class="text-slate-500">Belum ada laporan.</p><% } %>
+<input id="q" placeholder="Cari tiket…" class="w-full border rounded-xl p-3 mb-3 font-mono">
+<div class="bg-white rounded-2xl shadow overflow-hidden">
+<table class="w-full text-sm">
+  <thead class="bg-slate-50 text-left text-xs text-slate-500">
+    <tr><th class="p-3">Tiket</th><th class="p-3">Kategori</th><th class="p-3">Status</th><th class="p-3">Urgensi</th></tr>
+  </thead>
+  <tbody id="rows">
+  <% const urgColor = {Ringan:'bg-green-100 text-green-800',Sedang:'bg-yellow-100 text-yellow-800',Berat:'bg-red-100 text-red-800'}; %>
+  <% reports.forEach(r => { %>
+    <tr class="border-t hover:bg-blue-50" data-ticket="<%= r.ticket_code %>">
+      <td class="p-3"><a href="/admin/<%= r.ticket_code %>" class="font-mono font-bold text-blue-700"><%= r.ticket_code %></a></td>
+      <td class="p-3"><%= r.kategori %></td>
+      <td class="p-3"><span class="text-xs bg-slate-200 px-2 py-1 rounded-full"><%= r.status %></span></td>
+      <td class="p-3"><% if (r.urgensi) { %><span class="text-xs px-2 py-1 rounded-full <%= urgColor[r.urgensi]||'bg-slate-200' %>"><%= r.urgensi %></span><% } else { %>-<% } %></td>
+    </tr>
+  <% }) %>
+  </tbody>
+</table>
+<% if (!reports.length) { %><p class="text-slate-500 p-4 text-sm">Belum ada laporan.</p><% } %>
 </div>
 <script>
+document.getElementById('q').addEventListener('input', (e) => {
+  const q = e.target.value.toUpperCase();
+  document.querySelectorAll('#rows tr').forEach(tr => {
+    tr.style.display = tr.dataset.ticket.includes(q) ? '' : 'none';
+  });
+});
 setInterval(async () => {
   try {
     const r = await fetch('/admin/unread-count'); const j = await r.json();
-    const b = document.getElementById('badge'); b.textContent = j.count + ' baru';
-    if (j.count > 0 && Notification?.permission === 'granted') {} // no web push, badge only
+    document.getElementById('badge').textContent = j.count + ' baru';
   } catch {}
 }, 15000);
 </script>
