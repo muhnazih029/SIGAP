@@ -9,6 +9,8 @@
 \usepackage{hyperref}
 \usepackage{booktabs}
 \usepackage{enumitem}
+\usepackage{float}
+\setlist{itemsep=0.35em, topsep=0.4em, parsep=0.15em}
 \usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage{tikz}
@@ -21,8 +23,8 @@
 \renewcommand{\contentsname}{Daftar Isi}
 \renewcommand{\figurename}{Gambar}
 \renewcommand{\tablename}{Tabel}
-% Bagian utama huruf kapital (A, B, C...), sub-bagian angka berlanjut (1, 2, 3...).
-\renewcommand{\thesection}{\Alph{section}}
+% Bagian utama huruf kapital + titik (A., B., C...), sub-bagian angka (1, 2, 3...).
+\renewcommand{\thesection}{\Alph{section}.}
 \counterwithout{subsection}{section}
 \renewcommand{\thesubsection}{\arabic{subsection}}
 
@@ -34,25 +36,10 @@
     minimum height=1cm, align=center, font=\small},
   aktor/.style={font=\small\bfseries}
 }
-% Dua screenshot berdampingan untuk langkah yang berurutan.
-\newcommand{\screenshotpair}[4]{%
-  \begin{figure}[htbp]
-  \centering
-  \begin{minipage}{0.48\linewidth}\centering
-    \IfFileExists{gambar/#1}{\includegraphics[width=\linewidth,height=0.42\textheight,keepaspectratio]{gambar/#1}}{%
-      \fbox{\parbox{\linewidth}{\centering \vspace{0.6cm}\textit{[Screenshot: #3]}\\\vspace{0.6cm}}}}
-    \caption{#3}
-  \end{minipage}\hfill
-  \begin{minipage}{0.48\linewidth}\centering
-    \IfFileExists{gambar/#2}{\includegraphics[width=\linewidth,height=0.42\textheight,keepaspectratio]{gambar/#2}}{%
-      \fbox{\parbox{\linewidth}{\centering \vspace{0.6cm}\textit{[Screenshot: #4]}\\\vspace{0.6cm}}}}
-    \caption{#4}
-  \end{minipage}
-  \end{figure}}
 \newcommand{\screenshot}[3][0.8\linewidth]{%
-  \begin{figure}[htbp]
+  \begin{figure}[H]
   \centering
-  \IfFileExists{gambar/#2}{\includegraphics[width=#1,height=0.55\textheight,keepaspectratio]{gambar/#2}}{%
+  \IfFileExists{gambar/#2}{\includegraphics[width=#1,height=0.5\textheight,keepaspectratio]{gambar/#2}}{%
     \fbox{\parbox{0.8\linewidth}{\centering \vspace{0.8cm}
     \textit{[Screenshot: #3]} \\ \vspace{0.8cm}}}}
   \caption{#3}
@@ -121,12 +108,16 @@ Gambar~\ref{fig:usecase} memetakan siapa melakukan apa di dalam sistem.
   \draw (guru) -- (u3);
   \draw[panah, dashed] (u1) -- (u3);
 \end{tikzpicture}
-\caption{Diagram use case: siswa melapor dan memantau, Guru BK mengelola.
-Panah putus-putus berarti laporan mengalir dari pelapor ke admin.}
+\caption{Diagram use case.}
 \label{fig:usecase}
 \end{figure}
 
-Siswa tidak memerlukan akun sama sekali; Guru BK masuk dengan satu akun
+Diagram di atas dibaca dari kedua sisi aktor menuju kotak sistem di tengah.
+Siswa di kiri terhubung ke dua elips: mengisi laporan dan mengecek status
+tiket --- keduanya tanpa akun. Guru BK di kanan terhubung ke elips pengelolaan
+dan verifikasi laporan. Panah putus-putus dari elips laporan ke elips
+verifikasi berarti setiap laporan yang masuk otomatis menjadi antrean kerja
+admin. Siswa tidak memerlukan akun sama sekali; Guru BK masuk dengan satu akun
 khusus menggunakan username dan password.
 
 \section{Persyaratan Sistem}
@@ -134,12 +125,11 @@ Cukup HP atau laptop dengan browser modern (Chrome, Edge, Firefox, atau
 Safari). Tidak harus satu WiFi: aplikasi sudah \textit{deploy} dan dapat
 diakses dari internet di alamat berikut:
 \begin{center}\texttt{sigap.azdastudio.my.id}\end{center}
-Foto bukti berformat JPG/PNG/WebP dan dikompres otomatis sebelum dikirim.
+Foto bukti berformat JPG/PNG/WebP, maksimal 2 MB --- kecilkan atau kompres
+terlebih dahulu bila foto dari HP kebesaran, karena file yang melebihi batas
+akan ditolak.
 
 \section{Alur Kerja Sistem}
-Alur pelapor (Gambar~\ref{fig:alurp}) dirancang tiga ketukan: isi, simpan,
-pantau. Tidak ada langkah keempat.
-
 \begin{figure}[h]
 \centering
 \begin{tikzpicture}[node distance=0.45cm]
@@ -155,9 +145,12 @@ pantau. Tidak ada langkah keempat.
 \label{fig:alurp}
 \end{figure}
 
-Alur admin (Gambar~\ref{fig:alura}) dimulai oleh notifikasi, berakhir di status
-Selesai. Setiap laporan baru memicu dua sinyal sekaligus: lencana di dashboard
-dan pesan Telegram.
+Alur pelapor pada Gambar~\ref{fig:alurp} dirancang tiga ketukan: isi, simpan,
+pantau. Kuncinya ada di ketukan kedua --- kode tiket adalah satu-satunya bukti
+kepemilikan laporan karena sistem tidak menyimpan identitas apa pun. Kehilangan
+kode berarti kehilangan akses, sehingga halaman sukses menyediakan tombol salin
+dan cetak tepat saat kode diterbitkan. Tidak ada langkah keempat dan tidak ada
+pendaftaran akun.
 
 \begin{figure}[h]
 \centering
@@ -175,6 +168,14 @@ dan pesan Telegram.
 \caption{Alur admin.}
 \label{fig:alura}
 \end{figure}
+
+Alur admin pada Gambar~\ref{fig:alura} selalu dimulai oleh notifikasi, bukan
+oleh jadwal memeriksa. Setiap laporan baru memicu dua sinyal sekaligus ---
+lencana angka di dashboard dan pesan Telegram ke HP --- sehingga tidak ada
+laporan yang mengendap tanpa disadari. Verifikasi adalah gerbang mutu:
+laporan yang tidak valid berhenti di sini, yang valid diberi urgensi lalu
+dimajukan statusnya. Ujung alur ini tersambung ke alur pelapor: status Selesai
+yang ditetapkan admin adalah hal yang dilihat siswa di linimasa tiketnya.
 
 Kode tiket terdiri dari nomor urut dan kode acak sehingga tidak dapat ditebak
 pihak lain, dan dapat disalin ke clipboard langsung dari halaman sukses.
@@ -207,41 +208,34 @@ Berikut rincian lengkap fitur aplikasi berdasarkan peran penggunanya.
 \section{Panduan Siswa}
 Ikuti sesuai urutan gambar: formulir, halaman sukses, halaman cek.
 
-\screenshot{form-lapor.jpg}{formulir laporan}
 \begin{enumerate}
   \item Pilih kategori yang paling sesuai, tulis kronologi sejujur-jujurnya
         (apa, kapan, di mana, siapa yang terlibat). Lampirkan foto bila ada,
         lalu tekan \textbf{Kirim Laporan}.
-\end{enumerate}
-\screenshotpair{sukses-tiket.jpg}{cek-tiket.jpg}{halaman sukses dan kode tiket}{hasil cek status dan linimasa}
-\begin{enumerate}[resume]
+  \screenshot{form-lapor.jpg}{formulir laporan}
   \item \textbf{Simpan kode tiket} yang muncul: salin dengan tombol
         \textbf{Salin Kode} atau cetak halamannya.
+  \screenshot{sukses-tiket.jpg}{halaman sukses dan kode tiket}
   \item Buka \textbf{Cek Tiket} kapan saja dan masukkan kode untuk melihat
         perkembangan status laporan.
+  \screenshot{cek-tiket.jpg}{hasil cek status dan linimasa}
 \end{enumerate}
 
 \section{Panduan Guru BK}
-\screenshot{login-admin.jpg}{halaman login admin}
 \begin{enumerate}
   \item Masuk dengan username dan password yang diberikan pengembang.
-\end{enumerate}
-\screenshot{dashboard.jpg}{dashboard admin}
-\begin{enumerate}[resume]
+  \screenshot{login-admin.jpg}{halaman login admin}
   \item Pantau lencana angka di judul dashboard. Saring dengan dropdown filter
         atau cari kode tiket tertentu.
-\end{enumerate}
-\screenshot{detail-laporan.jpg}{rincian laporan}
-\begin{enumerate}[resume]
+  \screenshot{dashboard.jpg}{dashboard admin}
   \item Buka rincian, periksa kronologi dan foto bukti, tentukan urgensi, lalu
         majukan status hingga \textbf{Selesai} dengan tombol \textbf{Simpan}.
-\end{enumerate}
-\screenshot{ganti-password.jpg}{halaman ganti password}
-\begin{enumerate}[resume]
+  \screenshot{detail-laporan.jpg}{rincian laporan}
   \item Segera ganti password bawaan melalui menu avatar di kanan atas navbar.
+  \screenshot{ganti-password.jpg}{halaman ganti password}
 \end{enumerate}
 
-\subsection{Aktivasi Notifikasi Telegram}
+\section{Aktivasi Notifikasi Telegram}
 Fitur notifikasi sudah siap di aplikasi, tetapi \textbf{belum dipasang} karena
 membutuhkan bot milik sekolah. Langkahnya (5 menit, dari HP Guru BK):
 \begin{enumerate}[nosep]
