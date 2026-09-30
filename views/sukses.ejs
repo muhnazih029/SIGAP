@@ -2,9 +2,25 @@
 <div class="bg-white p-6 rounded shadow text-center">
   <h1 class="text-xl font-bold mb-2">Laporan Terkirim</h1>
   <p class="text-sm mb-4">Simpan kode tiket ini untuk cek status:</p>
-  <div class="text-3xl font-mono font-bold bg-slate-100 p-4 rounded mb-4"><%= ticket %></div>
-  <a href="/cek?ticket=<%= ticket %>" class="bg-blue-700 hover:bg-blue-800 transition text-white font-bold px-4 py-3 rounded-xl">Cek Status</a>
-  <button onclick="window.print()" class="ml-2 border px-4 py-3 rounded-xl">Cetak</button>
+  <div id="ticketCode" class="text-3xl font-mono font-bold bg-slate-100 p-4 rounded-xl mb-4 select-all"><%= ticket %></div>
+  <div class="flex gap-2 justify-center flex-wrap">
+    <button id="copyBtn" class="border font-bold px-4 py-3 rounded-xl hover:bg-slate-100 transition">Salin Kode</button>
+    <a href="/cek?ticket=<%= ticket %>" class="bg-blue-700 hover:bg-blue-800 transition text-white font-bold px-4 py-3 rounded-xl">Cek Status</a>
+    <button onclick="window.print()" class="border px-4 py-3 rounded-xl hover:bg-slate-100 transition">Cetak</button>
+  </div>
 </div>
-<script>toast('Laporan terkirim. Simpan kode tiketmu.');</script>
+<script>
+toast('Laporan terkirim. Simpan kode tiketmu.');
+document.getElementById('copyBtn').addEventListener('click', async () => {
+  const code = document.getElementById('ticketCode').textContent.trim();
+  try {
+    await navigator.clipboard.writeText(code);
+  } catch {
+    const r = document.createRange(); r.selectNodeContents(document.getElementById('ticketCode'));
+    const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+    document.execCommand('copy'); s.removeAllRanges();
+  }
+  toast('Kode tiket disalin.');
+});
+</script>
 <%- include('_foot') %>
