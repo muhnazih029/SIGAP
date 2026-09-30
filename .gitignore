@@ -3,3 +3,9 @@ node_modules/
 session_sigap.json
 public/uploads/*
 !public/uploads/.gitkeep
+# LaTeX build artifacts (PDF built locally for client via WA)
+docs-client/*.pdf
+docs-client/*.aux
+docs-client/*.log
+docs-client/*.out
+docs-client/*.toc
