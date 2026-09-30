@@ -1,13 +1,6 @@
 <%- include('_head', { title: 'Dashboard' }) %>
 <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
   <h1 class="text-2xl font-extrabold">Dashboard <span id="badge" class="text-xs bg-red-600 text-white px-2 py-1 rounded-full align-middle"><%= unread %> baru</span></h1>
-  <div class="relative">
-    <button id="avatarBtn" class="w-10 h-10 rounded-full bg-blue-700 text-white font-bold hover:bg-blue-800 transition" title="Menu admin">A</button>
-    <div id="avatarMenu" class="hidden absolute right-0 mt-2 w-44 bg-white rounded-xl shadow-lg border text-sm overflow-hidden z-10">
-      <a href="/admin/password" class="block px-4 py-3 hover:bg-slate-100">🔑 Ganti Password</a>
-      <form action="/admin/logout" method="POST"><button class="w-full text-left px-4 py-3 hover:bg-slate-100 text-red-700">🚪 Keluar</button></form>
-    </div>
-  </div>
 </div>
 <div class="flex gap-2 mb-3">
   <input id="q" placeholder="Cari tiket…" class="flex-1 border rounded-xl p-3 font-mono min-w-0">
@@ -40,11 +33,6 @@
 <% if (!reports.length) { %><p class="text-slate-500 p-4 text-sm">Belum ada laporan.</p><% } %>
 </div>
 <script>
-document.getElementById('avatarBtn').addEventListener('click', (e) => {
-  e.stopPropagation();
-  document.getElementById('avatarMenu').classList.toggle('hidden');
-});
-document.addEventListener('click', () => document.getElementById('avatarMenu').classList.add('hidden'));
 document.getElementById('statusFilter').addEventListener('change', (e) => {
   const v = e.target.value;
   window.location = '/admin' + (v === 'Semua' ? '' : '?status=' + v);

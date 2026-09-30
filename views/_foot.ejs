@@ -3,6 +3,13 @@
 <div id="toasts" aria-live="polite"></div>
 <script src="/toast.js"></script>
 <script>
+document.getElementById('navAvatar')?.addEventListener('click', (e) => {
+  e.stopPropagation();
+  document.getElementById('navMenu')?.classList.toggle('hidden');
+});
+document.addEventListener('click', () => document.getElementById('navMenu')?.classList.add('hidden'));
+</script>
+<script>
 if ('serviceWorker' in navigator) { navigator.serviceWorker.register('/sw.js').catch(()=>{}); }
 </script>
 </body>

@@ -22,7 +22,21 @@
   <a href="/" class="font-extrabold text-lg tracking-tight">SIGAP</a>
   <nav class="flex gap-2 items-center text-sm font-semibold">
     <a href="/cek" class="bg-white text-blue-800 px-4 py-2 rounded-full hover:bg-blue-50 transition">Cek Tiket</a>
-    <a href="/admin" class="text-blue-300 hover:text-white transition text-xs px-1">Admin</a>
+    <% if (typeof admin !== 'undefined' && admin) { %>
+      <div class="relative">
+        <button id="navAvatar" title="<%= admin.username %>" class="w-9 h-9 rounded-full bg-white text-blue-800 hover:bg-blue-50 transition flex items-center justify-center">
+          <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        </button>
+        <div id="navMenu" class="hidden absolute right-0 mt-2 w-48 bg-white text-slate-800 rounded-xl shadow-lg border text-sm overflow-hidden z-20">
+          <div class="px-4 py-2.5 text-xs text-slate-500 border-b font-semibold"><%= admin.username %></div>
+          <a href="/admin" class="block px-4 py-2.5 hover:bg-slate-100">Dashboard</a>
+          <a href="/admin/password" class="block px-4 py-2.5 hover:bg-slate-100">Ganti Password</a>
+          <form action="/admin/logout" method="POST"><button class="w-full text-left px-4 py-2.5 hover:bg-slate-100 text-red-700 font-semibold">Keluar</button></form>
+        </div>
+      </div>
+    <% } else { %>
+      <a href="/admin" class="text-blue-200 hover:text-white transition text-sm px-1">Admin</a>
+    <% } %>
   </nav>
 </header>
 <main class="max-w-2xl mx-auto p-4">

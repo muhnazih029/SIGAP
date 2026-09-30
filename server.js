@@ -40,6 +40,13 @@ app.use(
   })
 );
 
+// Expose login state to all views: navbar shows "Admin" text when logged out,
+// avatar menu when logged in.
+app.use((req, res, next) => {
+  res.locals.admin = req.session?.admin || null;
+  next();
+});
+
 app.use('/', publicRoutes);
 app.use('/admin', adminRoutes);
 
