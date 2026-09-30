@@ -5,7 +5,7 @@ Mirror of `.env.example`. Do not add vars without updating this file.
 | Var | Required | Example |
 |-----|----------|---------|
 | PORT | no | 3000 |
-| DATABASE_URL | yes | postgres://sigap:sigap@localhost:5432/sigap |
+| DATABASE_URL | yes | postgres://sigap:changeme@localhost:5432/sigap (`changeme` = dev placeholder, override in prod) |
 | SESSION_SECRET | yes | min 32 chars random |
 | SUPABASE_URL | phase 2 only | https://xyz.supabase.co |
 | SUPABASE_KEY | phase 2 only | service_role key (server only, never expose) |

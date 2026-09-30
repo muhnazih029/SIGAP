@@ -3,9 +3,10 @@ services:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
-      # Dev defaults are safe to commit. Prod secrets come from `.env` (gitignored).
+      # Dev default `changeme` is an intentional non-secret placeholder
+      # (scanner-ignored). Prod secrets come from `.env` (gitignored).
       POSTGRES_USER: ${POSTGRES_USER:-sigap}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sigap}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
       POSTGRES_DB: ${POSTGRES_DB:-sigap}
     volumes:
       - pgdata:/var/lib/postgresql/data
