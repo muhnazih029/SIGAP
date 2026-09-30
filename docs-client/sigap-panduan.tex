@@ -13,6 +13,9 @@
 \usepackage{xcolor}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta, positioning, shapes.geometric}
+% Spasi baris seragam 1,25 di seluruh dokumen + indentasi paragraf.
+\linespread{1.25}
+\setlength{\parindent}{1.25cm}
 \hypersetup{colorlinks=true, linkcolor=black, urlcolor=black, citecolor=black,
   pdftitle={SIGAP - Dokumentasi dan Buku Panduan Penggunaan}, pdfauthor={Azda Studio}}
 \renewcommand{\contentsname}{Daftar Isi}
@@ -31,8 +34,21 @@
     minimum height=1cm, align=center, font=\small},
   aktor/.style={font=\small\bfseries}
 }
-% Screenshot: pakai file bila ada, kalau belum difoto tampilkan bingkai penanda.
-% Gambar dibatasi tingginya agar berbagi halaman dengan teks.
+% Dua screenshot berdampingan untuk langkah yang berurutan.
+\newcommand{\screenshotpair}[4]{%
+  \begin{figure}[htbp]
+  \centering
+  \begin{minipage}{0.48\linewidth}\centering
+    \IfFileExists{gambar/#1}{\includegraphics[width=\linewidth,height=0.42\textheight,keepaspectratio]{gambar/#1}}{%
+      \fbox{\parbox{\linewidth}{\centering \vspace{0.6cm}\textit{[Screenshot: #3]}\\\vspace{0.6cm}}}}
+    \caption{#3}
+  \end{minipage}\hfill
+  \begin{minipage}{0.48\linewidth}\centering
+    \IfFileExists{gambar/#2}{\includegraphics[width=\linewidth,height=0.42\textheight,keepaspectratio]{gambar/#2}}{%
+      \fbox{\parbox{\linewidth}{\centering \vspace{0.6cm}\textit{[Screenshot: #4]}\\\vspace{0.6cm}}}}
+    \caption{#4}
+  \end{minipage}
+  \end{figure}}
 \newcommand{\screenshot}[3][0.8\linewidth]{%
   \begin{figure}[htbp]
   \centering
@@ -48,12 +64,12 @@
 \thispagestyle{empty}
 \begin{center}
   \vspace*{1cm}
-  {\Huge \textbf{SIGAP}}\\[0.5cm]
+  {\fontsize{44}{48}\selectfont \textbf{SIGAP}}\\[0.5cm]
   {\LARGE Dokumentasi dan Buku Panduan Penggunaan}\\[0.4cm]
-  {\large Sistem Informasi Gerakan Anti Penindasan}\\[0.3cm]
-  {\normalsize Versi 1.0 MVP (Prototype) --- 2026}
+  {\large Sistem Informasi Gerakan Anti Penindasan}
   \vfill
-  {\large by Azda Studio}
+  {\large by Azda Studio}\\[0.2cm]
+  {\normalsize Versi 1.0 MVP (Prototype) --- 2026}
 \end{center}
 \clearpage
 
@@ -116,8 +132,9 @@ khusus menggunakan username dan password.
 \section{Persyaratan Sistem}
 Cukup HP atau laptop dengan browser modern (Chrome, Edge, Firefox, atau
 Safari). Tidak harus satu WiFi: aplikasi sudah \textit{deploy} dan dapat
-diakses dari internet di alamat \texttt{sigap.azdastudio.my.id}. Foto bukti
-berformat JPG/PNG/WebP dan dikompres otomatis sebelum dikirim.
+diakses dari internet di alamat berikut:
+\begin{center}\texttt{sigap.azdastudio.my.id}\end{center}
+Foto bukti berformat JPG/PNG/WebP dan dikompres otomatis sebelum dikirim.
 
 \section{Alur Kerja Sistem}
 Alur pelapor (Gambar~\ref{fig:alurp}) dirancang tiga ketukan: isi, simpan,
@@ -163,6 +180,7 @@ Kode tiket terdiri dari nomor urut dan kode acak sehingga tidak dapat ditebak
 pihak lain, dan dapat disalin ke clipboard langsung dari halaman sukses.
 
 \section{Rincian Fitur}
+Berikut rincian lengkap fitur aplikasi berdasarkan peran penggunanya.
 \subsection{Untuk Siswa (Publik)}
 \begin{itemize}
   \item \textbf{Formulir laporan} --- kategori (Fisik, Verbal, Sosial, Cyber),
@@ -195,13 +213,10 @@ Ikuti sesuai urutan gambar: formulir, halaman sukses, halaman cek.
         (apa, kapan, di mana, siapa yang terlibat). Lampirkan foto bila ada,
         lalu tekan \textbf{Kirim Laporan}.
 \end{enumerate}
-\screenshot{sukses-tiket.jpg}{halaman sukses dan kode tiket}
+\screenshotpair{sukses-tiket.jpg}{cek-tiket.jpg}{halaman sukses dan kode tiket}{hasil cek status dan linimasa}
 \begin{enumerate}[resume]
   \item \textbf{Simpan kode tiket} yang muncul: salin dengan tombol
         \textbf{Salin Kode} atau cetak halamannya.
-\end{enumerate}
-\screenshot{cek-tiket.jpg}{hasil cek status dan linimasa}
-\begin{enumerate}[resume]
   \item Buka \textbf{Cek Tiket} kapan saja dan masukkan kode untuk melihat
         perkembangan status laporan.
 \end{enumerate}
@@ -238,6 +253,8 @@ membutuhkan bot milik sekolah. Langkahnya (5 menit, dari HP Guru BK):
 \end{enumerate}
 
 \section{Keamanan dan Privasi}
+Privasi pelapor adalah prinsip utama perancangan SIGAP, dijaga lewat empat
+lapis berikut:
 \begin{itemize}
   \item \textbf{Anonimitas:} pelapor tidak diminta nama, akun, atau kontak apa pun.
   \item \textbf{Foto bukti} hanya dapat dilihat admin yang sudah masuk; halaman
@@ -248,53 +265,31 @@ membutuhkan bot milik sekolah. Langkahnya (5 menit, dari HP Guru BK):
         selain foto ditolak.
 \end{itemize}
 
-\section{Batasan Versi MVP}
-Versi prototype ini belum mencakup: penurunan kualitas foto otomatis agar selalu
-di bawah 2 MB (foto kebesaran masih ditolak dan perlu diperkecil manual);
-aplikasi native Android/iOS (masih PWA berbasis website); akun admin lebih dari
-satu; penyimpanan file cloud/bucket (masih di server); dan blurring wajah
-otomatis pada foto. Daftar ini menjadi bahan diskusi tahap berikutnya.
-
-\section{Ketentuan Serah Terima}
-\begin{itemize}[nosep]
-  \item Paket ini mencakup aplikasi versi 1.0 MVP sesuai rincian fitur di atas.
-  \item Termasuk \textbf{satu kali revisi kecil} (teks, warna, tata letak).
-  \item Fitur di luar daftar akan dibahas dan disepakati terpisah.
+\section{Batasan dan Cara Kerja Sistem}
+Agar ekspektasi selaras, berikut cara sistem bekerja beserta batasnya, dalam
+satu daftar yang mudah dibaca:
+\begin{itemize}
+  \item \textbf{Alur status:} setiap laporan baru selalu mulai dari
+        \textit{Diterima}, lalu maju mengikuti penanganan nyata ---
+        \textit{Diverifikasi} (laporan valid), \textit{Diproses} (sedang
+        ditangani), hingga \textit{Selesai}. Siswa melihat perubahan yang sama
+        persis saat mengecek tiketnya.
+  \item \textbf{Urgensi:} ditentukan Guru BK untuk memprioritaskan antrean ---
+        \textit{Ringan} ditangani rutin, \textit{Sedang} perlu perhatian khusus,
+        \textit{Berat} prioritas utama. Boleh kosong pada laporan baru dan wajib
+        diisi sebelum status Selesai.
+  \item \textbf{Foto:} penurunan kualitas otomatis agar selalu di bawah 2 MB
+        belum ada --- foto kebesaran masih ditolak dan perlu diperkecil manual.
+  \item \textbf{Platform:} masih PWA berbasis website, belum aplikasi
+        Android/iOS native.
+  \item \textbf{Akun:} admin tunggal (satu Guru BK), belum mendukung banyak akun.
+  \item \textbf{Penyimpanan:} file masih di server, belum memakai cloud/bucket.
+  \item \textbf{Privasi foto:} blurring wajah otomatis belum ada --- foto hanya
+        terlihat oleh admin yang sudah masuk.
 \end{itemize}
+Daftar ini menjadi bahan diskusi pengembangan tahap berikutnya.
 
 \section{FAQ}
-Status laporan memiliki empat tahap. Berikut artinya masing-masing:
-
-\begin{center}
-\begin{tabular}{ll}
-\toprule
-\textbf{Status} & \textbf{Arti} \\
-\midrule
-Diterima & Laporan masuk, belum diperiksa \\
-Diverifikasi & Laporan valid, siap ditindaklanjuti \\
-Diproses & Sedang ditangani Guru BK \\
-Selesai & Penanganan tuntas \\
-\bottomrule
-\end{tabular}
-\end{center}
-Status bergerak maju mengikuti penanganan nyata: laporan baru selalu mulai dari
-Diterima, dan siswa melihat perubahan yang sama persis saat mengecek tiketnya.
-
-Tingkat urgensi ditentukan Guru BK untuk memprioritaskan antrean:
-
-\begin{center}
-\begin{tabular}{ll}
-\toprule
-\textbf{Urgensi} & \textbf{Arti} \\
-\midrule
-Ringan & Ditangani rutin \\
-Sedang & Perlu perhatian khusus \\
-Berat & Prioritas utama \\
-\bottomrule
-\end{tabular}
-\end{center}
-Urgensi boleh kosong pada laporan baru dan wajib diisi sebelum status Selesai.
-
 \begin{enumerate}[nosep]
   \item \textbf{Apakah pelapor harus punya akun?} Tidak, pelaporan anonim.
   \item \textbf{Kode tiket hilang, bagaimana?} Hubungi Guru BK dengan menyebutkan
@@ -302,8 +297,12 @@ Urgensi boleh kosong pada laporan baru dan wajib diisi sebelum status Selesai.
   \item \textbf{Apakah foto bukti wajib?} Tidak, tetapi sangat membantu verifikasi.
   \item \textbf{Siapa yang bisa melihat foto bukti?} Hanya admin yang sudah masuk.
   \item \textbf{Apakah bisa lapor lewat WhatsApp?} Belum di versi ini.
-  \item \textbf{Data tersimpan di mana?} Di server Azdastudio (milik pengembang
-        yang dipercaya sekolah), bukan di layanan asing.
+  \item \textbf{Data tersimpan di mana?} Untuk sekarang masih di server
+        Azdastudio, dan bisa dideploy ke server sekolah jika diperlukan.
+  \item \textbf{Apa saja yang termasuk paket ini?} Aplikasi versi 1.0 MVP sesuai
+        rincian fitur di atas.
+  \item \textbf{Apakah ada revisi?} Termasuk satu kali revisi kecil (teks, warna,
+        tata letak). Fitur di luar daftar dibahas dan disepakati terpisah.
 \end{enumerate}
 
 \end{document}
