@@ -1,0 +1,29 @@
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      # Dev defaults are safe to commit. Prod secrets come from `.env` (gitignored).
+      POSTGRES_USER: ${POSTGRES_USER:-sigap}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sigap}
+      POSTGRES_DB: ${POSTGRES_DB:-sigap}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+
+  app:
+    image: node:20-alpine
+    working_dir: /app
+    command: sh -c "npm install && npm start"
+    volumes:
+      - ./:/app
+      - ./public/uploads:/app/public/uploads
+    ports:
+      - "3000:3000"
+    env_file: .env
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
