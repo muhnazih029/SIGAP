@@ -1,12 +1,10 @@
+% Compile dengan: pdflatex sigap-panduan.tex (2x untuk daftar isi)
+% Butuh: sudo pacman -S texlive-fontsrecommended  (font Times)
 \documentclass[12pt,a4paper]{article}
 \usepackage[margin=2.5cm]{geometry}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-% babel Indonesian unavailable as .ldf on this TeX Live: set labels manually.
-\renewcommand{\contentsname}{Daftar Isi}
-\renewcommand{\figurename}{Gambar}
-\renewcommand{\tablename}{Tabel}
-\renewcommand{\refname}{Referensi}
+\usepackage{mathptmx}
 \usepackage{hyperref}
 \usepackage{booktabs}
 \usepackage{enumitem}
@@ -14,41 +12,60 @@
 \usepackage{xcolor}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta, positioning}
-\hypersetup{colorlinks=true, linkcolor=blue!70!black, urlcolor=blue!70!black,
-  pdftitle={SIGAP - Dokumentasi dan Buku Panduan Penggunaan}}
+\hypersetup{colorlinks=true, linkcolor=black, urlcolor=black, citecolor=black,
+  pdftitle={SIGAP - Dokumentasi dan Buku Panduan Penggunaan}, pdfauthor={Azda Studio}}
+\renewcommand{\contentsname}{Daftar Isi}
+\renewcommand{\figurename}{Gambar}
+\renewcommand{\tablename}{Tabel}
 
 \tikzset{
-  alir/.style={rectangle, rounded corners, draw=blue!70!black, fill=blue!5,
-    minimum width=4.6cm, minimum height=0.85cm, align=center, font=\footnotesize},
-  panah/.style={-{Stealth}, thick, blue!70!black}
+  alir/.style={rectangle, rounded corners, draw=black, fill=gray!8,
+    minimum width=5cm, minimum height=0.9cm, align=center},
+  panah/.style={-{Stealth}, thick}
 }
+% Screenshot: pakai file bila ada, kalau belum difoto tampilkan bingkai penanda.
+% Gambar dibatasi tingginya agar berbagi halaman dengan teks.
+\newcommand{\screenshot}[3][0.8\linewidth]{%
+  \begin{figure}[htbp]
+  \centering
+  \IfFileExists{gambar/#2}{\includegraphics[width=#1,height=0.55\textheight,keepaspectratio]{gambar/#2}}{%
+    \fbox{\parbox{0.8\linewidth}{\centering \vspace{0.8cm}
+    \textit{[Screenshot: #3]} \\ \vspace{0.8cm}}}}
+  \caption{#3}
+  \end{figure}}
 
 \begin{document}
 
 % ---------------- Sampul ----------------
 \begin{center}
-  \vspace*{1.5cm}
-  {\Large \textbf{SIGAP}}\\[0.4cm]
-  {\large Dokumentasi dan Buku Panduan Penggunaan}\\[0.3cm]
-  {\normalsize Sistem Informasi Gerakan Anti Penindasan}\\[1.2cm]
+  \vspace*{1cm}
+  {\Huge \textbf{SIGAP}}\\[0.5cm]
+  {\LARGE Dokumentasi dan Buku Panduan Penggunaan}\\[0.4cm]
+  {\large Sistem Informasi Gerakan Anti Penindasan}\\[1.5cm]
   \begin{tikzpicture}
-    \node[alir, minimum width=6cm] (a) {Siswa melapor (anonim)};
-    \node[alir, minimum width=6cm, below=0.5cm of a] (b) {Guru BK menindaklanjuti};
+    \node[alir, minimum width=6.5cm] (a) {Siswa melapor secara anonim};
+    \node[alir, minimum width=6.5cm, below=0.6cm of a] (b) {Guru BK menindaklanjuti};
     \draw[panah] (a) -- (b);
-  \end{tikzpicture}\\[1.2cm]
+  \end{tikzpicture}\\[1.5cm]
+  {\large by Azda Studio}\\[0.4cm]
   {\normalsize Versi 1.0 MVP --- 2026}
 \end{center}
 \clearpage
 
-% ---------------- Isi ----------------
 \tableofcontents
 \clearpage
 
+% ---------------- Isi ----------------
+\section{Latar Belakang}
+Perundungan (\textit{bullying}) di lingkungan sekolah sering tidak dilaporkan
+karena korban atau saksi takut identitasnya diketahui. SIGAP menjawab masalah
+ini dengan menyediakan kanal pelaporan anonim: siapa pun dapat melapor tanpa
+membuat akun, dan setiap laporan dapat dipantau perkembangannya melalui kode
+tiket. Di sisi sekolah, Guru BK mendapatkan satu pintu terpusat untuk
+memverifikasi, memprioritaskan, dan menuntaskan setiap laporan.
+
 \section{Gambaran Aplikasi}
-SIGAP (Sistem Informasi Gerakan Anti Penindasan) adalah aplikasi web untuk
-pelaporan perundungan (\textit{bullying}) di lingkungan sekolah. Siswa dapat
-melapor secara anonim dan memantau status laporannya dengan kode tiket,
-sementara Guru BK memverifikasi dan menindaklanjuti setiap laporan yang masuk.
+Aplikasi web ini memiliki dua peran pengguna:
 
 \begin{center}
 \begin{tabular}{lll}
@@ -61,27 +78,45 @@ Guru BK (Admin) & Kelola semua laporan & Username + password \\
 \end{tabular}
 \end{center}
 
+\subsection{Persyaratan Sistem}
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{Kebutuhan} & \textbf{Minimum} \\
+\midrule
+Perangkat pelapor & HP Android/iOS atau laptop dengan browser modern \\
+Perangkat admin & Laptop dengan browser modern (Chrome/Edge/Firefox/Safari) \\
+Koneksi & Satu jaringan WiFi/lokal dengan server, atau internet \\
+Foto bukti & JPG/PNG/WebP, maksimal 2 MB (dikompres otomatis) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
 \section{Alur Kerja Sistem}
-Gambar~\ref{fig:alur} menunjukkan alur kerja kedua aktor.
+Gambar~\ref{fig:alur} menunjukkan alur kerja kedua aktor dari awal sampai akhir.
 
 \begin{figure}[h]
 \centering
-\begin{tikzpicture}[node distance=0.45cm]
+\begin{tikzpicture}[node distance=0.5cm]
   \node[alir] (p1) {1. Isi formulir laporan};
   \node[alir, below=of p1] (p2) {2. Terima kode tiket\\\texttt{BLY-0007-K7Q9}};
-  \node[alir, below=of p2] (p3) {3. Cek status berkala};
+  \node[alir, below=of p2] (p3) {3. Salin / cetak kode};
+  \node[alir, below=of p3] (p4) {4. Cek status berkala};
   \draw[panah] (p1) -- (p2);
   \draw[panah] (p2) -- (p3);
+  \draw[panah] (p3) -- (p4);
 \end{tikzpicture}
-\hspace{0.8cm}
-\begin{tikzpicture}[node distance=0.45cm]
-  \node[alir] (a1) {1. Terima notifikasi};
-  \node[alir, below=of a1] (a2) {2. Buka dashboard};
-  \node[alir, below=of a2] (a3) {3. Verifikasi + urgensi};
-  \node[alir, below=of a3] (a4) {4. Selesai};
+\hspace{1cm}
+\begin{tikzpicture}[node distance=0.5cm]
+  \node[alir] (a1) {1. Notifikasi Telegram masuk};
+  \node[alir, below=of a1] (a2) {2. Login, buka dashboard};
+  \node[alir, below=of a2] (a3) {3. Baca rincian + bukti foto};
+  \node[alir, below=of a3] (a4) {4. Verifikasi + tentukan urgensi};
+  \node[alir, below=of a4] (a5) {5. Majukan status hingga Selesai};
   \draw[panah] (a1) -- (a2);
   \draw[panah] (a2) -- (a3);
   \draw[panah] (a3) -- (a4);
+  \draw[panah] (a4) -- (a5);
 \end{tikzpicture}
 \caption{Kiri: alur pelapor. Kanan: alur admin.}
 \label{fig:alur}
@@ -89,61 +124,91 @@ Gambar~\ref{fig:alur} menunjukkan alur kerja kedua aktor.
 
 Kode tiket terdiri dari nomor urut dan kode acak, misalnya
 \texttt{BLY-0007-K7Q9}, sehingga tidak dapat ditebak oleh pihak lain.
+Kode dapat disalin ke clipboard atau dicetak langsung dari halaman sukses.
 
 \section{Rincian Fitur}
 \subsection{Untuk Siswa (Publik)}
-\begin{itemize}[nosep]
-  \item Formulir laporan: kategori, kronologi, waktu, lokasi, dan satu foto bukti.
-  \item Kode tiket otomatis setiap laporan berhasil dikirim.
-  \item Halaman cek status berupa linimasa: Diterima $\rightarrow$ Diverifikasi
-        $\rightarrow$ Diproses $\rightarrow$ Selesai.
-  \item Dapat dipasang sebagai aplikasi di HP (PWA) dari browser.
+\begin{itemize}
+  \item \textbf{Formulir laporan} --- kategori (Fisik, Verbal, Sosial, Cyber),
+        kronologi kejadian, waktu, lokasi, dan satu foto bukti (opsional).
+        Foto dari HP dikompres otomatis agar cepat terkirim.
+  \item \textbf{Kode tiket otomatis} --- diterbitkan setiap laporan berhasil
+        dikirim, lengkap dengan tombol salin dan cetak.
+  \item \textbf{Halaman cek status} --- linimasa Diterima $\rightarrow$
+        Diverifikasi $\rightarrow$ Diproses $\rightarrow$ Selesai, plus
+        tingkat urgensi bila sudah ditentukan.
+  \item \textbf{PWA} --- halaman dapat dipasang sebagai aplikasi dari browser HP
+        (menu \textit{Add to Home Screen}) tanpa Play Store.
 \end{itemize}
 \subsection{Untuk Guru BK (Admin)}
-\begin{itemize}[nosep]
-  \item Login aman (sesi + password terenkripsi) dan fitur ganti password.
-  \item Dashboard: saring berdasarkan status, cari berdasarkan kode tiket.
-  \item Penentuan urgensi (Ringan, Sedang, Berat) dan ubah status laporan.
-  \item Notifikasi ganda: lencana jumlah laporan baru + pesan Telegram otomatis.
+\begin{itemize}
+  \item \textbf{Login aman} --- sesi terproteksi, password tersimpan terenkripsi,
+        dilengkapi fitur ganti password dan pengunci brute-force (maksimal
+        5x salah per 15 menit).
+  \item \textbf{Dashboard} --- saring laporan per status lewat dropdown filter,
+        cari cepat dengan kode tiket, dan lencana jumlah laporan baru yang
+        diperbarui otomatis tiap 15 detik.
+  \item \textbf{Rincian laporan} --- kronologi lengkap, foto bukti, penentuan
+        urgensi (Ringan, Sedang, Berat), dan pengubah status.
+  \item \textbf{Notifikasi ganda} --- lencana di dashboard plus pesan Telegram
+        otomatis ke HP admin setiap ada laporan masuk.
 \end{itemize}
 
-\section{Panduan Penggunaan}
-\subsection{Panduan Siswa}
+\section{Panduan Siswa}
+\begin{enumerate}
+  \item Buka halaman utama, pilih kategori yang paling sesuai, tulis kronologi
+        sejujur-jujurnya (apa yang terjadi, kapan, di mana, siapa yang terlibat).
+  \item Lampirkan foto bila ada, tekan \textbf{Kirim Laporan}.
+  \item \textbf{Simpan kode tiket} yang muncul: salin dengan tombol
+        \textbf{Salin Kode} atau cetak halamannya.
+  \item Buka \textbf{Cek Tiket} kapan saja, masukkan kode untuk melihat
+        perkembangan status laporan.
+\end{enumerate}
+\screenshot{form-lapor.jpg}{formulir laporan}
+\screenshot{sukses-tiket.jpg}{halaman sukses dan kode tiket}
+\screenshot{cek-tiket.jpg}{hasil cek status dan linimasa}
+
+\section{Panduan Guru BK}
+\begin{enumerate}
+  \item Buka halaman admin, masuk dengan username dan password yang diberikan
+        pengembang.
+  \item Pantau lencana angka di judul dashboard --- itulah laporan berstatus
+        Diterima yang belum dibaca. Tiap laporan baru juga masuk ke Telegram.
+  \item Saring dengan dropdown filter atau cari kode tiket tertentu, buka
+        rinciannya, periksa kronologi dan foto bukti.
+  \item Tentukan urgensi, majukan status (Diverifikasi $\rightarrow$ Diproses
+        $\rightarrow$ Selesai) dengan tombol \textbf{Simpan}.
+  \item Segera ganti password bawaan melalui menu avatar di kanan atas navbar.
+\end{enumerate}
+\screenshot{ganti-password.jpg}{halaman ganti password}
+\screenshot{login-admin.jpg}{halaman login admin}
+\screenshot{dashboard.jpg}{dashboard admin}
+\screenshot{detail-laporan.jpg}{rincian laporan}
+
+\subsection{Aktivasi Notifikasi Telegram (5 menit)}
 \begin{enumerate}[nosep]
-  \item Buka halaman utama, isi formulir sejujur-jujurnya, lampirkan foto bila ada.
-  \item Tekan \textbf{Kirim Laporan}, lalu \textbf{simpan kode tiket} yang muncul
-        (catat atau cetak halaman tersebut).
-  \item Buka \textbf{Cek Tiket}, masukkan kode untuk melihat perkembangan status.
+  \item Chat ke \texttt{@BotFather}, buat bot baru, salin token yang diberikan.
+  \item Chat ke \texttt{@userinfobot} untuk melihat ID chat (angka).
+  \item Kirim satu pesan apa saja ke bot baru tersebut.
+  \item Serahkan token dan ID chat kepada pengembang untuk dipasang di server.
 \end{enumerate}
 
-\begin{figure}[h]
-\centering
-\fbox{\parbox{0.8\linewidth}{\centering \vspace{0.8cm}
-\textit{[Screenshot: formulir laporan]} \\ \vspace{0.8cm}}}
-\caption{Contoh tampilan formulir laporan.}
-\end{figure}
+\section{Keamanan dan Privasi}
+\begin{itemize}
+  \item \textbf{Anonimitas:} pelapor tidak diminta nama, akun, atau kontak apa pun.
+  \item \textbf{Foto bukti} hanya dapat dilihat admin yang sudah masuk; halaman
+        cek tiket publik tidak pernah menampilkan foto maupun lokasi lengkap.
+  \item \textbf{Password admin} disimpan dalam bentuk terenkripsi (bcrypt) dan
+        tidak dapat dikembalikan ke teks aslinya oleh siapa pun.
+  \item \textbf{Anti-spam:} satu perangkat dibatasi 10 laporan per jam,
+        file selain foto ditolak, dan foto dipindai ulang sebelum disimpan.
+\end{itemize}
 
-\subsection{Panduan Guru BK}
-\begin{enumerate}[nosep]
-  \item Buka halaman admin, masuk dengan username dan password yang diberikan.
-  \item Pantau lencana \textbf{baru} di dashboard; tiap laporan baru juga
-        dikirim ke Telegram.
-  \item Buka rincian laporan, tentukan urgensi, lalu majukan statusnya hingga
-        \textbf{Selesai}.
-  \item Segera ganti password bawaan melalui menu avatar di kanan atas.
-\end{enumerate}
-
-\textbf{Aktivasi notifikasi Telegram (5 menit):} (1) chat ke \texttt{@BotFather},
-buat bot baru, salin token; (2) chat ke \texttt{@userinfobot} untuk melihat ID
-chat; (3) kirim satu pesan ke bot baru tersebut; (4) serahkan token dan ID chat
-kepada pengembang untuk dipasang.
-
-\begin{figure}[h]
-\centering
-\fbox{\parbox{0.8\linewidth}{\centering \vspace{0.8cm}
-\textit{[Screenshot: dashboard admin]} \\ \vspace{0.8cm}}}
-\caption{Contoh tampilan dashboard admin.}
-\end{figure}
+\section{Batasan Versi MVP}
+Agar ekspektasi selaras, versi 1.0 ini \textbf{belum} mencakup:
+laporan via WhatsApp/e-mail, akun admin lebih dari satu, riwayat audit perubahan,
+Blurring wajah otomatis pada foto, serta aplikasi Android/iOS native.
+Daftar ini dapat menjadi bahan diskusi pengembangan tahap berikutnya.
 
 \section{Ketentuan Serah Terima}
 \begin{itemize}[nosep]
@@ -184,6 +249,10 @@ Berat & Prioritas utama \\
         waktu dan lokasi kejadian untuk penelusuran manual.
   \item \textbf{Apakah foto bukti wajib?} Tidak, tetapi sangat membantu verifikasi.
   \item \textbf{Siapa yang bisa melihat foto bukti?} Hanya admin yang sudah masuk.
+  \item \textbf{Apakah bisa lapor lewat WhatsApp?} Belum di versi ini (lihat
+        Batasan Versi MVP).
+  \item \textbf{Data tersimpan di mana?} Di server sekolah, bukan di layanan
+        asing, sehingga kepemilikan data penuh di tangan sekolah.
 \end{enumerate}
 
 \end{document}
