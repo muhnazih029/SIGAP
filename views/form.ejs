@@ -1,0 +1,30 @@
+<%- include('_head', { title: 'Lapor' }) %>
+<h1 class="text-2xl font-bold mb-1">Form Laporan Bullying</h1>
+<p class="text-sm text-slate-600 mb-4">Anonim. Simpan kode tiket setelah mengirim.</p>
+<% if (error) { %><div class="bg-red-100 text-red-800 p-3 rounded mb-4"><%= error %></div><% } %>
+<form action="/lapor" method="POST" enctype="multipart/form-data" id="laporForm" class="bg-white p-4 rounded shadow space-y-3">
+  <label class="block">Kategori
+    <select name="kategori" required class="w-full border rounded p-2 mt-1">
+      <% ['Fisik','Verbal','Sosial','Cyber'].forEach(k => { %>
+        <option <%= old.kategori===k?'selected':'' %>><%= k %></option>
+      <% }) %>
+    </select>
+  </label>
+  <label class="block">Kronologi (min 20 karakter)
+    <textarea name="kronologi" required minlength="20" rows="4" class="w-full border rounded p-2 mt-1"><%= old.kronologi||'' %></textarea>
+  </label>
+  <label class="block">Waktu kejadian
+    <input type="datetime-local" name="waktu_kejadian" required value="<%= old.waktu_kejadian||'' %>" class="w-full border rounded p-2 mt-1">
+  </label>
+  <label class="block">Lokasi
+    <input type="text" name="lokasi" required value="<%= old.lokasi||'' %>" placeholder="Contoh: Kelas 10-A" class="w-full border rounded p-2 mt-1">
+  </label>
+  <label class="block">Bukti foto (opsional, JPG/PNG/WebP, maks 2MB)
+    <input type="file" name="bukti" id="bukti" accept="image/jpeg,image/png,image/webp" class="w-full mt-1">
+    <span id="compressNote" class="text-xs text-slate-500"></span>
+  </label>
+  <input type="text" name="website" style="display:none" tabindex="-1" autocomplete="off">
+  <button id="submitBtn" class="bg-blue-700 text-white px-4 py-2 rounded w-full">Kirim Laporan</button>
+</form>
+<script src="/compress.js"></script>
+<%- include('_foot') %>

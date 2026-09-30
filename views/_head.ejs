@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><%= typeof title !== 'undefined' ? title + ' — ' : '' %>SIGAP</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#1e40af">
+</head>
+<body class="bg-slate-100 text-slate-900 min-h-screen">
+<header class="bg-blue-800 text-white px-4 py-3 flex justify-between items-center">
+  <a href="/" class="font-bold text-lg">SIGAP</a>
+  <nav class="flex gap-3 text-sm">
+    <a href="/cek" class="underline">Cek Tiket</a>
+    <a href="/admin" class="underline">Admin</a>
+  </nav>
+</header>
+<main class="max-w-2xl mx-auto p-4">

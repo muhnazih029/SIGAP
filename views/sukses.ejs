@@ -1,0 +1,9 @@
+<%- include('_head', { title: 'Berhasil' }) %>
+<div class="bg-white p-6 rounded shadow text-center">
+  <h1 class="text-xl font-bold mb-2">Laporan Terkirim</h1>
+  <p class="text-sm mb-4">Simpan kode tiket ini untuk cek status:</p>
+  <div class="text-3xl font-mono font-bold bg-slate-100 p-4 rounded mb-4"><%= ticket %></div>
+  <a href="/cek?ticket=<%= ticket %>" class="bg-blue-700 text-white px-4 py-2 rounded">Cek Status</a>
+  <button onclick="window.print()" class="ml-2 border px-4 py-2 rounded">Cetak</button>
+</div>
+<%- include('_foot') %>

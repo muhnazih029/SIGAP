@@ -1,0 +1,35 @@
+<%- include('_head', { title: r.ticket_code }) %>
+<a href="/admin" class="underline text-sm">← Kembali</a>
+<h1 class="text-xl font-bold font-mono mt-2 mb-4"><%= r.ticket_code %></h1>
+<div class="bg-white p-4 rounded shadow space-y-2 mb-4">
+  <div>Kategori: <b><%= r.kategori %></b></div>
+  <div>Waktu: <%= r.waktu_kejadian %></div>
+  <div>Lokasi: <%= r.lokasi %></div>
+  <div class="whitespace-pre-wrap border-t pt-2"><%= r.kronologi %></div>
+  <% if (r.bukti_url) { %><img src="<%= r.bukti_url %>" class="max-w-full rounded mt-2" loading="lazy"><% } %>
+</div>
+<form id="upd" class="bg-white p-4 rounded shadow space-y-3">
+  <label class="block">Status
+    <select id="status" class="w-full border rounded p-2 mt-1">
+      <% statusList.forEach(s => { %><option <%= r.status===s?'selected':'' %>><%= s %></option><% }) %>
+    </select>
+  </label>
+  <label class="block">Urgensi
+    <select id="urgensi" class="w-full border rounded p-2 mt-1">
+      <option value="">—</option>
+      <% urgensiList.forEach(u => { %><option <%= r.urgensi===u?'selected':'' %>><%= u %></option><% }) %>
+    </select>
+  </label>
+  <button class="bg-blue-700 text-white px-4 py-2 rounded">Simpan</button>
+  <span id="msg" class="text-sm"></span>
+</form>
+<script>
+document.getElementById('upd').onsubmit = async (e) => {
+  e.preventDefault();
+  const body = { status: document.getElementById('status').value };
+  const u = document.getElementById('urgensi').value; if (u) body.urgensi = u;
+  const r = await fetch('/admin/<%= r.ticket_code %>', { method: 'PATCH', headers: {'Content-Type':'application/json'}, body: JSON.stringify(body) });
+  document.getElementById('msg').textContent = r.ok ? 'Tersimpan.' : 'Gagal menyimpan.';
+};
+</script>
+<%- include('_foot') %>

@@ -1,0 +1,34 @@
+<%- include('_head', { title: 'Dashboard' }) %>
+<div class="flex justify-between items-center mb-4">
+  <h1 class="text-2xl font-bold">Dashboard <span id="badge" class="text-sm bg-red-600 text-white px-2 py-1 rounded"><%= unread %> baru</span></h1>
+  <div class="flex gap-2 text-sm">
+    <a href="/admin/password" class="underline">Ganti Password</a>
+    <form action="/admin/logout" method="POST"><button class="underline">Keluar</button></form>
+  </div>
+</div>
+<div class="flex gap-2 mb-4 text-sm flex-wrap">
+  <% ['Semua','Diterima','Diverifikasi','Diproses','Selesai'].forEach(s => { %>
+    <a href="/admin<%= s==='Semua'?'':'?status='+s %>" class="px-3 py-1 rounded <%= filter===s?'bg-blue-700 text-white':'bg-white border' %>"><%= s %></a>
+  <% }) %>
+</div>
+<div class="space-y-2">
+<% reports.forEach(r => { %>
+  <a href="/admin/<%= r.ticket_code %>" class="block bg-white p-3 rounded shadow">
+    <span class="font-mono font-bold"><%= r.ticket_code %></span>
+    <span class="ml-2 text-sm"><%= r.kategori %></span>
+    <span class="ml-2 text-xs bg-slate-200 px-2 py-1 rounded"><%= r.status %></span>
+    <span class="ml-1 text-xs"><%= r.urgensi||'' %></span>
+  </a>
+<% }) %>
+<% if (!reports.length) { %><p class="text-slate-500">Belum ada laporan.</p><% } %>
+</div>
+<script>
+setInterval(async () => {
+  try {
+    const r = await fetch('/admin/unread-count'); const j = await r.json();
+    const b = document.getElementById('badge'); b.textContent = j.count + ' baru';
+    if (j.count > 0 && Notification?.permission === 'granted') {} // no web push, badge only
+  } catch {}
+}, 15000);
+</script>
+<%- include('_foot') %>
