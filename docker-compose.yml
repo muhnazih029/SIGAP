@@ -11,12 +11,15 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      # localhost-only: DB never exposed to LAN, migrate via compose exec
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
 
   app:
     image: node:20-alpine
+    restart: unless-stopped
     working_dir: /app
-    command: sh -c "npm install && npm start"
+    # heap cap: STB has <1GB RAM, keep npm install from OOM-killing the box
+    command: sh -c "NODE_OPTIONS=--max-old-space-size=256 npm install --no-audit --no-fund && npm start"
     volumes:
       - ./:/app
       - ./public/uploads:/app/public/uploads
