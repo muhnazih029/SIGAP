@@ -1,7 +1,13 @@
+function showFileName(name, size) {
+  const el = document.getElementById('fileName');
+  if (el) el.textContent = `— ${name} (${Math.round(size / 1024)} KB)`;
+}
+
 // Client-side compress: HP photo 4-6MB -> <1MB before upload. Server 2MB is backstop.
 document.getElementById('bukti')?.addEventListener('change', async (e) => {
   const file = e.target.files[0];
   if (!file) return;
+  showFileName(file.name, file.size);
   if (file.size <= 1024 * 1024) return; // already small
   try {
     const bmp = await createImageBitmap(file);
@@ -16,6 +22,7 @@ document.getElementById('bukti')?.addEventListener('change', async (e) => {
     const dt = new DataTransfer();
     dt.items.add(new File([blob], file.name.replace(/\.\w+$/, '.jpg'), { type: 'image/jpeg' }));
     e.target.files = dt.files;
+    showFileName(dt.files[0].name, dt.files[0].size);
     document.getElementById('compressNote').textContent = 'Foto dikompres otomatis agar cepat diupload.';
   } catch {
     document.getElementById('compressNote').textContent = 'Gagal kompres, file asli dikirim (maks 2MB).';
